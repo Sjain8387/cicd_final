@@ -1,20 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Web App</title>
+  <title>Simple Frontend</title>
 </head>
 <body>
-    <h1>Welcome to My Simple Web App</h1>
-    <button id="getData">Get Backend Data</button>
-    <p id="response"></p>
-    <script>
-        document.getElementById('getData').addEventListener('click', async () => {
-            const response = await fetch('/api/hello');
-            const data = await response.json();
-            document.getElementById('response').innerText = data.message;
-        });
-    </script>
+  <h1>Fetch API Response</h1>
+  <p>Enter your name:</p>
+  <input type="text" id="nameInput" placeholder="Your Name" />
+  <button onclick="fetchMessage()">Fetch Message</button>
+  <p id="message"></p>
+
+  <script>
+    async function fetchMessage() {
+      // Get the name entered by the user
+      const name = document.getElementById('nameInput').value;
+
+      try {
+        // Make an API request with the name as a query parameter
+        const response = await fetch(`/api/hello?name=${encodeURIComponent(name)}`);
+        
+        // Handle non-OK responses
+        if (!response.ok) {
+          throw new Error('Failed to fetch the message.');
+        }
+
+        // Get the text response from the backend
+        const message = await response.text();
+
+        // Display the message in the paragraph
+        document.getElementById('message').innerText = message;
+      } catch (error) {
+        // Display an error message
+        document.getElementById('message').innerText = 'Error: ' + error.message;
+      }
+    }
+  </script>
 </body>
 </html>
